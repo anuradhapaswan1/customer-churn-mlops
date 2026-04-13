@@ -1,2 +1,6 @@
-uvicorn
 fastapi
+uvicorn
+scikit-learn
+joblib
+pandas
+numpy
