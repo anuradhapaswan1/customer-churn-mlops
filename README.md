@@ -23,8 +23,9 @@ The model was trained on a bank customer dataset. Features included:
 ### 🔌 API Usage
 You can test the API by sending a POST request to the `/predict` endpoint.
 
-**Example Input:**
-```json
+### 🚀 Example Input
+To test the API manually via the Swagger UI or Postman, use the following JSON structure:
+
 {
   "CreditScore": 600,
   "Age": 40,
@@ -39,7 +40,14 @@ You can test the API by sending a POST request to the `/predict` endpoint.
   "Gender_Male": 1
 }
 
-### 👥 Team Members
-* **Anuradha Paswan** - [https://github.com/anuradhapaswan1]
-* **Shubham Chakma** - [https://github.com/ShubhamChakma]
-* **Kriti Yadav** - [https://github.com/kriti546]
+👥 Team Members
+Anuradha Paswan - GitHub Profile
+Shubham Chakma - GitHub Profile
+Kriti Yadav - GitHub Profile
+
+🛠️ Tech Stack
+Backend: Python, FastAPI
+Frontend: Streamlit (Enterprise Design)
+Deployment: Render (API)
+ML Model: Scikit-Learn (Random Forest/XGBoost)
+
