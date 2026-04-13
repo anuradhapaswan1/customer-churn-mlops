@@ -41,13 +41,20 @@ To test the API manually via the Swagger UI or Postman, use the following JSON s
 }
 ```
 👥 Team Members
+
 Anuradha Paswan - GitHub Profile
+
 Shubham Chakma - GitHub Profile
+
 Kriti Yadav - GitHub Profile
 
 🛠️ Tech Stack
+
 Backend: Python, FastAPI
+
 Frontend: Streamlit (Enterprise Design)
+
 Deployment: Render (API)
+
 ML Model: Scikit-Learn (Random Forest/XGBoost)
 
