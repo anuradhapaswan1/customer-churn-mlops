@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "models", "churn_model.pkl")
+MODEL_PATH = os.getenv("MODEL_PATH", os.path.join(BASE_DIR, "models", "churn_model.pkl"))
 
 model = None
 
