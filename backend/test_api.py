@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 # Ensure backend directory is in path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import app as app_module
 from app import app
@@ -19,7 +19,7 @@ class MockModel:
 # 2. Force the app's global model variable to use our mock
 app_module.model = MockModel()
 
-# 4. Initialize the test client
+# 3. Initialize the test client
 client = TestClient(app)
 
 def test_predict_success_flow():
