@@ -344,23 +344,30 @@ with tab1:
         used_url = None
         
         with st.status("Accessing predictive gateway telemetry...", expanded=True) as status:
+            # 1. Attempt quick connection (local or remote)
             for url in API_URLS:
                 try:
                     status.write(f"📡 Querying gateway: `{url}`...")
-                    resp = requests.post(url, json=payload, timeout=5)
-                    resp.raise_for_status()
-                    used_url = url
-                    break
+                    r = requests.post(url, json=payload, timeout=5)
+                    if r.status_code == 200:
+                        resp = r
+                        used_url = url
+                        break
                 except Exception:
                     continue
             
+            # 2. If quick connection failed, attempt long timeout connection (Render cold start)
             if resp is None:
-                # Retrying the remote one with longer timeout in case of cold-start
                 status.write("⏳ Service is spinning up (Render Cold Start). Retrying remote server...")
                 try:
-                    resp = requests.post(API_URLS[1], json=payload, timeout=65)
-                    resp.raise_for_status()
-                    used_url = API_URLS[1]
+                    r = requests.post(API_URLS[1], json=payload, timeout=65)
+                    if r.status_code == 200:
+                        resp = r
+                        used_url = API_URLS[1]
+                    else:
+                        status.update(label=f"Gateway Response Error ({r.status_code})", state="error")
+                        st.error(f"🚨 **API Error {r.status_code}:** The gateway returned a non-success code. Details: {r.text}")
+                        st.stop()
                 except Exception as e:
                     status.update(label="API Connection Failed", state="error")
                     st.error(f"🚨 **Connection Error:** All endpoints are down or timing out. Details: {e}")
@@ -447,8 +454,8 @@ with tab2:
     cohort_size = st.slider("Select Analysis Cohort Size", min_value=100, max_value=5000, value=1000, step=100)
     
     # Generate some mock data
-    ages = np.random.normal(38, 10, cohort_size).clip(18, 90)
-    scores = np.random.normal(650, 80, cohort_size).clip(300, 850)
+    ages = np.random.normal(38, 10, cohort_size).clip(18, 90).astype(int)
+    scores = ((np.random.normal(650, 80, cohort_size).clip(300, 850) / 10).astype(int) * 10)
     salaries = np.random.normal(70000, 30000, cohort_size).clip(5000, 250000)
     tenure_vals = np.random.randint(0, 11, cohort_size)
     
@@ -462,11 +469,11 @@ with tab2:
     col_c1, col_c2 = st.columns(2)
     with col_c1:
         st.markdown("<div style='font-size:12px; color:#6B6B80; text-transform:uppercase; font-family:monospace; margin-bottom:8px;'>Age Demographics Density</div>", unsafe_allow_html=True)
-        st.bar_chart(df_cohort["Age"].value_counts().sort_index().tail(50))
+        st.bar_chart(df_cohort["Age"].value_counts().sort_index())
         
     with col_c2:
         st.markdown("<div style='font-size:12px; color:#6B6B80; text-transform:uppercase; font-family:monospace; margin-bottom:8px;'>Financial Credit Score Curve</div>", unsafe_allow_html=True)
-        st.area_chart(df_cohort["Credit Score"].value_counts().sort_index().tail(60))
+        st.area_chart(df_cohort["Credit Score"].value_counts().sort_index())
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("""
